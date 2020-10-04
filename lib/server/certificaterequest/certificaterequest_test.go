@@ -132,11 +132,13 @@ func TestGetTimes(t *testing.T) {
 }
 
 func TestValidateReq(t *testing.T) {
+	defaultTime := time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC)
+
 	req := &api.GetCertificatesRequest{
 		NotExpired: true,
 	}
 	times := &TimeFilters{
-		expiredStart: &time.Time{},
+		expiredStart: &defaultTime,
 	}
 	err := validateReq(req, times)
 	t.Log("Error: ", err)
@@ -146,7 +148,7 @@ func TestValidateReq(t *testing.T) {
 		NotExpired: true,
 	}
 	times = &TimeFilters{
-		expiredEnd: &time.Time{},
+		expiredEnd: &defaultTime,
 	}
 	err = validateReq(req, times)
 	t.Log("Error: ", err)
@@ -156,7 +158,7 @@ func TestValidateReq(t *testing.T) {
 		NotRevoked: true,
 	}
 	times = &TimeFilters{
-		revokedStart: &time.Time{},
+		revokedStart: &defaultTime,
 	}
 	err = validateReq(req, times)
 	t.Log("Error: ", err)
@@ -166,7 +168,7 @@ func TestValidateReq(t *testing.T) {
 		NotRevoked: true,
 	}
 	times = &TimeFilters{
-		revokedEnd: &time.Time{},
+		revokedEnd: &defaultTime,
 	}
 	err = validateReq(req, times)
 	t.Log("Error: ", err)

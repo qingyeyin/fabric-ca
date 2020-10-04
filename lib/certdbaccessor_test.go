@@ -183,6 +183,7 @@ func populateCertificatesTable(t *testing.T, ca *CA) {
 	dur, err := time.ParseDuration("+100h")
 	util.FatalError(t, err, "Failed to parse duration '+100h'")
 	futureTime := time.Now().Add(dur).UTC()
+	defaultTime := time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC)
 
 	ca.registry.InsertUser(&cadbuser.Info{
 		Name:        "testCertificate1",
@@ -190,9 +191,10 @@ func populateCertificatesTable(t *testing.T, ca *CA) {
 	})
 	// Active Certs
 	err = testInsertCertificate(&certdb.CertificateRecord{
-		Serial: "1111",
-		AKI:    "9876",
-		Expiry: futureTime,
+		Serial:    "1111",
+		AKI:       "9876",
+		Expiry:    futureTime,
+		RevokedAt: defaultTime,
 	}, "testCertificate1", ca)
 	util.FatalError(t, err, "Failed to insert certificate with serial/AKI")
 
@@ -201,32 +203,36 @@ func populateCertificatesTable(t *testing.T, ca *CA) {
 		Affiliation: "dept1",
 	})
 	err = testInsertCertificate(&certdb.CertificateRecord{
-		Serial: "1112",
-		AKI:    "9876",
-		Expiry: futureTime,
+		Serial:    "1112",
+		AKI:       "9876",
+		Expiry:    futureTime,
+		RevokedAt: defaultTime,
 	}, "testCertificate2", ca)
 	util.FatalError(t, err, "Failed to insert certificate with serial/AKI")
 
 	err = testInsertCertificate(&certdb.CertificateRecord{
-		Serial: "1132",
-		AKI:    "9876ab",
-		Expiry: futureTime,
+		Serial:    "1132",
+		AKI:       "9876ab",
+		Expiry:    futureTime,
+		RevokedAt: defaultTime,
 	}, "testCertificate3", ca)
 	util.FatalError(t, err, "Failed to insert certificate with revocation date")
 
 	// Expired
 	err = testInsertCertificate(&certdb.CertificateRecord{
-		Serial: "1121",
-		AKI:    "98765",
-		Expiry: time.Date(2018, time.March, 1, 0, 0, 0, 0, time.UTC),
+		Serial:    "1121",
+		AKI:       "98765",
+		Expiry:    time.Date(2018, time.March, 1, 0, 0, 0, 0, time.UTC),
+		RevokedAt: defaultTime,
 	}, "expire1", ca)
 	util.FatalError(t, err, "Failed to insert certificate with expiration date")
 
 	// Not Expired
 	err = testInsertCertificate(&certdb.CertificateRecord{
-		Serial: "1122",
-		AKI:    "98765",
-		Expiry: futureTime,
+		Serial:    "1122",
+		AKI:       "98765",
+		Expiry:    futureTime,
+		RevokedAt: defaultTime,
 	}, "expire2", ca)
 	util.FatalError(t, err, "Failed to insert certificate with expiration date")
 

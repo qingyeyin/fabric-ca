@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/cloudflare/cfssl/log"
 	proto "github.com/golang/protobuf/proto"
@@ -124,6 +125,8 @@ func (h *EnrollRequestHandler) HandleRequest() (*EnrollmentResponse, error) {
 		ID:               caller.GetName(),
 		Status:           "good",
 		Cred:             b64CredBytes,
+		Expiry:           h.GetDefaultTime(),
+		RevokedAt:        h.GetDefaultTime(),
 		RevocationHandle: rhstr,
 	})
 	if err != nil {
@@ -226,4 +229,10 @@ func (h *EnrollRequestHandler) GetAttributeValues(caller user.User, ipk *idemix.
 		}
 	}
 	return attrMap, rc, nil
+}
+
+// GetDefaultTime returns the default time used for revoked_at and expiry
+func (h *EnrollRequestHandler) GetDefaultTime() time.Time {
+	// 1970-01-01 00:00:01 +0000 UT
+	return time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC)
 }

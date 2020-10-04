@@ -98,6 +98,23 @@ func (d *CertDBAccessor) InsertCertificate(cr certdb.CertificateRecord) error {
 
 	log.Debugf("Saved serial number as hex %s", serial)
 
+	var expiryTime time.Time
+	var revokedAtTime time.Time
+
+	if cr.Expiry.UTC().IsZero() {
+		expiryTime = d.GetDefaultTime()
+	} else {
+		expiryTime = cr.Expiry.UTC()
+	}
+
+	if cr.RevokedAt.UTC().IsZero() {
+		revokedAtTime = d.GetDefaultTime()
+	} else {
+		revokedAtTime = cr.RevokedAt.UTC()
+	}
+
+	log.Debugf("Result expiryTime:%v, revokedAtTime:%v", expiryTime, revokedAtTime)
+
 	record := &db.CertRecord{
 		ID:    id,
 		Level: d.level,
@@ -107,8 +124,8 @@ func (d *CertDBAccessor) InsertCertificate(cr certdb.CertificateRecord) error {
 			CALabel:   cr.CALabel,
 			Status:    cr.Status,
 			Reason:    cr.Reason,
-			Expiry:    cr.Expiry.UTC(),
-			RevokedAt: cr.RevokedAt.UTC(),
+			Expiry:    expiryTime,
+			RevokedAt: revokedAtTime,
 			PEM:       cr.PEM,
 		},
 	}
@@ -349,7 +366,7 @@ func (d *CertDBAccessor) GetCertificates(req cr.CertificateRequest, callersAffil
 				args = append(args, expiredTimeStart)
 			} else {
 				whereConds = append(whereConds, "certificates.expiry >= ?")
-				args = append(args, time.Time{})
+				args = append(args, d.GetDefaultTime())
 			}
 			if expiredTimeEnd != nil {
 				whereConds = append(whereConds, "certificates.expiry <= ?")
@@ -360,7 +377,7 @@ func (d *CertDBAccessor) GetCertificates(req cr.CertificateRequest, callersAffil
 
 	if req.GetNotRevoked() { // If notrevoked is set to true, only return certificates that are not revoked (revoked date is set to zero time)
 		whereConds = append(whereConds, "certificates.revoked_at = ?")
-		args = append(args, time.Time{})
+		args = append(args, d.GetDefaultTime())
 	} else {
 		// If either revoked start time or end time is not nil, formulate the appropriate query parameters. If end is not nil and start is nil
 		// get all certificates that have an revocation date before the end date. If end is nil and start is not nil, get all certificates that
@@ -373,7 +390,7 @@ func (d *CertDBAccessor) GetCertificates(req cr.CertificateRequest, callersAffil
 				args = append(args, revokedTimeStart)
 			} else {
 				whereConds = append(whereConds, "certificates.revoked_at > ?")
-				args = append(args, time.Time{})
+				args = append(args, d.GetDefaultTime())
 			}
 			if revokedTimeEnd != nil {
 				whereConds = append(whereConds, "certificates.revoked_at <= ?")
@@ -395,4 +412,10 @@ func (d *CertDBAccessor) GetCertificates(req cr.CertificateRequest, callersAffil
 	}
 
 	return rows, nil
+}
+
+// GetDefaultTime returns the default time used for revoked_at and expiry
+func (d *CertDBAccessor) GetDefaultTime() time.Time {
+	// 1970-01-01 00:00:01 +0000 UT
+	return time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC)
 }

@@ -188,6 +188,7 @@ func getCredRecord() CredRecord {
 		ID:               "foo",
 		CALabel:          "",
 		Expiry:           time.Now(),
+		RevokedAt:        time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC),
 		Level:            1,
 		Reason:           0,
 		Status:           "good",

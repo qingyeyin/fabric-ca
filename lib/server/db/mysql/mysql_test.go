@@ -81,111 +81,112 @@ var _ = Describe("Mysql", func() {
 		})
 	})
 
-	Context("creating fabric ca database", func() {
-		It("returns an error if unable execute create fabric ca database sql", func() {
-			mockDB.ExecReturns(nil, errors.New("error creating database"))
-			db.SqlxDB = mockDB
-			_, err := db.CreateDatabase()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL database: Failed to execute create database query: error creating database"))
-		})
+	// 公司已经将数据库和表建好，不需要次测试
+	// Context("creating fabric ca database", func() {
+	// 	It("returns an error if unable execute create fabric ca database sql", func() {
+	// 		mockDB.ExecReturns(nil, errors.New("error creating database"))
+	// 		db.SqlxDB = mockDB
+	// 		_, err := db.CreateDatabase()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL database: Failed to execute create database query: error creating database"))
+	// 	})
 
-		It("creates the fabric ca database", func() {
-			db.SqlxDB = mockDB
+	// 	It("creates the fabric ca database", func() {
+	// 		db.SqlxDB = mockDB
 
-			_, err := db.CreateDatabase()
-			Expect(err).NotTo(HaveOccurred())
-		})
-	})
+	// 		_, err := db.CreateDatabase()
+	// 		Expect(err).NotTo(HaveOccurred())
+	// 	})
+	// })
 
-	Context("creating tables", func() {
-		It("returns an error if unable to create users table", func() {
-			mockDB.ExecReturnsOnCall(0, nil, errors.New("unable to create table"))
+	// Context("creating tables", func() {
+	// 	It("returns an error if unable to create users table", func() {
+	// 		mockDB.ExecReturnsOnCall(0, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating users table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating users table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to create affiliations table", func() {
-			mockDB.ExecReturnsOnCall(1, nil, errors.New("unable to create table"))
+	// 	It("returns an error if unable to create affiliations table", func() {
+	// 		mockDB.ExecReturnsOnCall(1, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating affiliations table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating affiliations table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to create index on affiliations table", func() {
-			mockDB.ExecReturnsOnCall(2, nil, errors.New("unable to create table"))
+	// 	It("returns an error if unable to create index on affiliations table", func() {
+	// 		mockDB.ExecReturnsOnCall(2, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating index on affiliations table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating index on affiliations table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to create certificates table", func() {
-			mockDB.ExecReturnsOnCall(3, nil, errors.New("unable to create table"))
+	// 	It("returns an error if unable to create certificates table", func() {
+	// 		mockDB.ExecReturnsOnCall(3, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating certificates table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating certificates table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to create credentials table", func() {
-			mockDB.ExecReturnsOnCall(4, nil, errors.New("unable to create table"))
+	// 	It("returns an error if unable to create credentials table", func() {
+	// 		mockDB.ExecReturnsOnCall(4, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating credentials table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating credentials table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to create revocation_authority_info table", func() {
-			mockDB.ExecReturnsOnCall(5, nil, errors.New("unable to create table"))
+	// 	It("returns an error if unable to create revocation_authority_info table", func() {
+	// 		mockDB.ExecReturnsOnCall(5, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating revocation_authority_info table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating revocation_authority_info table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to create nonces table", func() {
-			mockDB.ExecReturnsOnCall(6, nil, errors.New("unable to create table"))
+	// 	It("returns an error if unable to create nonces table", func() {
+	// 		mockDB.ExecReturnsOnCall(6, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating nonces table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating nonces table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to create properties table", func() {
-			mockDB.ExecReturnsOnCall(7, nil, errors.New("unable to create table"))
+	// 	It("returns an error if unable to create properties table", func() {
+	// 		mockDB.ExecReturnsOnCall(7, nil, errors.New("unable to create table"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating properties table: unable to create table"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: Error creating properties table: unable to create table"))
+	// 	})
 
-		It("returns an error if unable to insert default value in properties table", func() {
-			mockDB.ExecReturnsOnCall(8, nil, errors.New("unable to insert default values"))
+	// 	It("returns an error if unable to insert default value in properties table", func() {
+	// 		mockDB.ExecReturnsOnCall(8, nil, errors.New("unable to insert default values"))
 
-			db.SqlxDB = mockDB
-			err := db.CreateTables()
-			Expect(err).To(HaveOccurred())
-			Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: unable to insert default values"))
-		})
+	// 		db.SqlxDB = mockDB
+	// 		err := db.CreateTables()
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err.Error()).Should(ContainSubstring("Failed to create MySQL tables: unable to insert default values"))
+	// 	})
 
-		It("creates the fabric ca tables", func() {
-			db.SqlxDB = mockDB
+	// 	It("creates the fabric ca tables", func() {
+	// 		db.SqlxDB = mockDB
 
-			err := db.CreateTables()
-			Expect(err).NotTo(HaveOccurred())
-		})
+	// 		err := db.CreateTables()
+	// 		Expect(err).NotTo(HaveOccurred())
+	// 	})
 
-	})
+	// })
 })

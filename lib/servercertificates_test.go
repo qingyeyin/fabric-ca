@@ -16,6 +16,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/cloudflare/cfssl/certdb"
 	"github.com/hyperledger/fabric-ca/api"
@@ -236,9 +237,13 @@ func TestServerGetCertificates(t *testing.T) {
 	w := httptest.NewRecorder()
 	ctx.resp = &mockHTTPWriter{w, t}
 
+	defaultTime := time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC)
+
 	err = testInsertCertificate(&certdb.CertificateRecord{
-		Serial: "1111",
-		AKI:    "9876",
+		Serial:    "1111",
+		AKI:       "9876",
+		Expiry:    defaultTime,
+		RevokedAt: defaultTime,
 	}, "testCertificate", ca)
 	util.FatalError(t, err, "Failed to insert certificate with serial/AKI")
 

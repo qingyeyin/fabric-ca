@@ -23,16 +23,17 @@ function postgresDBCleanup() {
 }
 
 function populatePostgresCertsTable() {
+    log.Debugf("### populatePostgresCertsTable")
     # Expired and Not Revoked
-    insertCertsTable "user1" "1111" "2222" "11/18/2017" "01/01/0001"
-    insertCertsTable "user2" "1112" "2223" "1/18/2018" "01/01/0001"
-    insertCertsTable "user3" "1111" "2223" "1/18/2018" "01/01/0001"
-    insertCertsTable "user3" "1111" "2224" "1/18/2018" "01/01/0001"
-    insertCertsTable "user4" "1113" "2224" "1/25/2018" "01/01/0001"
+    insertCertsTable "user1" "1111" "2222" "11/18/2017" "01/01/1970 00:00:01"
+    insertCertsTable "user2" "1112" "2223" "1/18/2018" "01/01/1970 00:00:01"
+    insertCertsTable "user3" "1111" "2223" "1/18/2018" "01/01/1970 00:00:01"
+    insertCertsTable "user3" "1111" "2224" "1/18/2018" "01/01/1970 00:00:01"
+    insertCertsTable "user4" "1113" "2224" "1/25/2018" "01/01/1970 00:00:01"
 
     # Not Expired and Not Revoked
     NewDate=$(date "+%Y-%m-%d %H:%M:%S" -d "+20 days")
-    insertCertsTable "user5" "1114" "2225" "$NewDate" "01/01/0001"
+    insertCertsTable "user5" "1114" "2225" "$NewDate" "01/01/1970 00:00:01"
 
     # Revoked and Not Expired
     insertCertsTable "user5" "1115" "2225" "$NewDate" "2/18/2018"
@@ -211,16 +212,17 @@ function mysqlDBCleanup() {
 }
 
 function populateMySQLCertsTable() {
+    log.Debugf("### populateMySQLCertsTable")
     # Expired and Not Revoked
-    insertMySQLCertsTable "user1" "1111" "2222" "2017/11/18" "0000/00/00"
-    insertMySQLCertsTable "user2" "1112" "2223" "2018/01/18" "0000/00/00"
-    insertMySQLCertsTable "user3" "1111" "2223" "2018/01/18" "0000/00/00"
-    insertMySQLCertsTable "user3" "1111" "2224" "2018/01/18" "0000/00/00"
-    insertMySQLCertsTable "user4" "1113" "2224" "2018/01/25" "0000/00/00"
+    insertMySQLCertsTable "user1" "1111" "2222" "2017/11/18" "1970-01-01 00:00:01"
+    insertMySQLCertsTable "user2" "1112" "2223" "2018/01/18" "1970-01-01 00:00:01"
+    insertMySQLCertsTable "user3" "1111" "2223" "2018/01/18" "1970-01-01 00:00:01"
+    insertMySQLCertsTable "user3" "1111" "2224" "2018/01/18" "1970-01-01 00:00:01"
+    insertMySQLCertsTable "user4" "1113" "2224" "2018/01/25" "1970-01-01 00:00:01"
 
     # Not Expired and Not Revoked
     NewDate=$(date "+%Y-%m-%d %H:%M:%S" -d "+20 days")
-    insertMySQLCertsTable "user5" "1114" "2225" "$NewDate" "0000/00/00"
+    insertMySQLCertsTable "user5" "1114" "2225" "$NewDate" "1970-01-01 00:00:01"
 
     # Revoked and Not Expired
     insertMySQLCertsTable "user5" "1115" "2225" "$NewDate" "2018/02/18"

@@ -10,6 +10,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"testing"
+	"time"
 
 	proto "github.com/golang/protobuf/proto"
 	fp256bn "github.com/hyperledger/fabric-amcl/amcl/FP256BN"
@@ -373,9 +374,15 @@ func TestHandleIdemixEnrollInsertCredError(t *testing.T) {
 	}
 	credAccessor := new(mocks.CredDBAccessor)
 	credAccessor.On("InsertCredential",
-		CredRecord{RevocationHandle: util.B64Encode(idemix.BigToBytes(fp256bn.NewBIGint(1))),
-			CALabel: "", ID: "foo", Status: "good",
-			Cred: b64CredBytes}).Return(errors.New("Failed to add credential to DB"))
+		CredRecord{
+			RevocationHandle: util.B64Encode(idemix.BigToBytes(fp256bn.NewBIGint(1))),
+			CALabel:          "",
+			ID:               "foo",
+			Status:           "good",
+			Cred:             b64CredBytes,
+			Expiry:           time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC),
+			RevokedAt:        time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC),
+		}).Return(errors.New("Failed to add credential to DB"))
 
 	issuer.On("CredDBAccessor").Return(credAccessor, nil)
 	issuer.On("NonceManager").Return(nm)
@@ -454,7 +461,13 @@ func TestHandleIdemixEnrollForCredentialSuccess(t *testing.T) {
 	credAccessor := new(mocks.CredDBAccessor)
 	credAccessor.On("InsertCredential", CredRecord{
 		RevocationHandle: util.B64Encode(idemix.BigToBytes(fp256bn.NewBIGint(1))),
-		CALabel:          "", ID: "foo", Status: "good", Cred: b64CredBytes}).Return(nil)
+		CALabel:          "",
+		ID:               "foo",
+		Status:           "good",
+		Cred:             b64CredBytes,
+		Expiry:           time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC),
+		RevokedAt:        time.Date(1970, time.January, 1, 0, 0, 1, 0, time.UTC),
+	}).Return(nil)
 
 	issuer.On("CredDBAccessor").Return(credAccessor, nil)
 	issuer.On("NonceManager").Return(nm)
